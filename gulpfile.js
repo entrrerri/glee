@@ -1,50 +1,47 @@
-const {src, dest, watch, parallel}  = require('gulp');
+const { src, dest, watch, parallel } = require("gulp");
 
-const sass = require ('gulp-sass')(require('sass')),
+const sass = require("gulp-sass")(require("sass")),
+  concat = require("gulp-concat"),
+  autoprefixer = require("gulp-autoprefixer"),
+  uglify = require("gulp-uglify"),
+  // imagemin = require('gulp-imagemin'),
 
-    concat = require ('gulp-concat'),
-
-    autoprefixer = require ('gulp-autoprefixer'),
-
-    uglify = require ('gulp-uglify'),
-
-    // imagemin = require('gulp-imagemin'),
-
-    browserSync = require('browser-sync').create();
-
+  browserSync = require("browser-sync").create();
 
 function browsersync() {
-    browserSync.init({
-        server: {
-            baseDir: 'app/'
-        },
-        notify: false
-    });
-};
-
-
-function styles(){
-    return src('app/scss/style.scss')
-    .pipe(sass({outputStyle:'compressed'}))
-    .pipe (autoprefixer({
-        overrideBrowserslist: ['last 5 versions'],
-        grid: true
-    }))
-    .pipe(concat('style.min.css'))
-    
-    .pipe(dest('app/css'))
-    .pipe(browserSync.stream())
+  browserSync.init({
+    server: {
+      baseDir: "app/",
+    },
+    notify: false,
+  });
 }
 
-function scripts(){
-    return src([
-        'node_modules/jquery/dist/jquery.js',
-        'app/js/main.js'
-    ])
-    .pipe (concat('main.min.js'))
+function styles() {
+  return src("app/scss/style.scss")
+    .pipe(sass({ outputStyle: "compressed" }))
+    .pipe(
+      autoprefixer({
+        overrideBrowserslist: ["last 5 versions"],
+        grid: true,
+      })
+    )
+    .pipe(concat("style.min.css"))
+
+    .pipe(dest("app/css"))
+    .pipe(browserSync.stream());
+}
+
+function scripts() {
+  return src([
+    "node_modules/jquery/dist/jquery.js",
+    "node_modules/slick-carousel/slick/slick.js",
+    "app/js/main.js",
+  ])
+    .pipe(concat("main.min.js"))
     .pipe(uglify())
-    .pipe(dest('app/js'))
-    .pipe(browserSync.stream())
+    .pipe(dest("app/js"))
+    .pipe(browserSync.stream());
 }
 
 // function images(){
@@ -63,26 +60,21 @@ function scripts(){
 //             })
 //         ]
 //     ))
-    
+
 // }
 
-function build(){
-    return src([
-        'app/**/*.html',
-        'app/css/style.min.css',
-        'app/js/main.min.js'
-    ], {base: 'app'})
-    .pipe(dest('dist'))
+function build() {
+  return src(["app/**/*.html", "app/css/style.min.css", "app/js/main.min.js"], {
+    base: "app",
+  }).pipe(dest("dist"));
 }
 
-function watching(){
-    watch(['app/scss/**/*.scss'], styles);
-    watch(['app/js/**/*.js', '!app/js/main.min.js' ], scripts); 
-    // ! исключение файла из отслеживания
-    watch(['app/**/*.html']).on('change', browserSync.reload);
+function watching() {
+  watch(["app/scss/**/*.scss"], styles);
+  watch(["app/js/**/*.js", "!app/js/main.min.js"], scripts);
+  // ! исключение файла из отслеживания
+  watch(["app/**/*.html"]).on("change", browserSync.reload);
 }
-
-
 
 exports.styles = styles;
 exports.scripts = scripts;
@@ -91,9 +83,5 @@ exports.browsersync = browsersync;
 exports.watching = watching;
 exports.build = build;
 
-
-
-
-
-exports.default = parallel (styles, scripts, browsersync, watching); 
+exports.default = parallel(styles, scripts, browsersync, watching);
 // нужно чтобы все таски запускались одной командой в строке (gulp)

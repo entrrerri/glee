@@ -1,17 +1,34 @@
-@import 'vars';
-@import 'fonts';
-@import 'reset';
-@import 'global';
+@import "vars";
+@import "fonts";
+@import "reset";
+@import "libs";
+@import "global";
 
+.header__inner {
+  display: flex;
+  justify-content: space-between;
+}
+.menu {
+  color: #436372;
+  &__list--item {
+    margin: 0 17px;
+  }
+}
+.menu__list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user__nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__link {
+    margin: 0 19px;
+    &--buy {
+      display: none;
+    }
+  }
+}
 
-
-
-
-
-
-
-
-
-
-@import 'media';
-
+@import "media";
